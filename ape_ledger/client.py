@@ -35,7 +35,6 @@ def get_dongle(debug: bool = False, reopen_on_fail: bool = True) -> HIDDongleHID
 
         raise  # the OSError
 
-
 class LedgerDeviceClient:
     def __init__(self, account: HDAccountPath):
         self._account = account.path.lstrip("m/")
@@ -53,15 +52,18 @@ class LedgerDeviceClient:
         return device
 
     def get_address(self) -> str:
-        return get_account_by_path(self._account, dongle=self.dongle).address
+        #return get_account_by_path(self._account, dongle=self.dongle).address
+        return get_account_by_path(self._account).address
 
     def sign_message(self, text: bytes) -> tuple[int, int, int]:
-        signed_msg = sign_message(text, sender_path=self._account, dongle=self.dongle)
+        #signed_msg = sign_message(text, sender_path=self._account, dongle=self.dongle)
+        signed_msg = sign_message(text, sender_path=self._account)
         return signed_msg.v, signed_msg.r, signed_msg.s
 
     def sign_typed_data(self, domain_hash: bytes, message_hash: bytes) -> tuple[int, int, int]:
         signed_msg = sign_typed_data_draft(
-            domain_hash, message_hash, sender_path=self._account, dongle=self.dongle
+            #domain_hash, message_hash, sender_path=self._account, dongle=self.dongle
+            domain_hash, message_hash, sender_path=self._account
         )
         return signed_msg.v, signed_msg.r, signed_msg.s
 
